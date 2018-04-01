@@ -1,0 +1,217 @@
+$cardWidth: 540px;
+
+$tableWidth: $cardWidth + 17px;
+$tableQueryFirstColWidth: 200px;
+
+$tableHeight: 451px;
+$tableHistoryHeight: $tableHeight + 49px;
+$tableQueryHeight: $tableHeight - 35px;
+
+body.passcode-fetcher {
+  font-family: Roboto;
+  overflow: hidden;
+
+  #passcode-amount {
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    width: 30px;
+    text-align: center;
+  }
+
+  #passcode-result {
+    resize: none;
+    font-family: Roboto;
+    font-size: 12px;
+  }
+
+  .passcode-result-wrapper {
+    position: absolute;
+    right: 3px;
+    bottom: 0;
+    width: 200px;
+    resize: none;
+  }
+
+  .mdl-card {
+    min-height: 0;
+    width: $cardWidth;
+
+    .mdl-card__supporting-text {
+      text-align: center;
+      align-self: center;
+    }
+
+    .mdl-card__actions {
+      &.mdl-card--center {
+        text-align: center;
+      }
+    }
+  }
+
+  .mdl-data-table {
+    width: $tableWidth;
+    height: $tableHeight;
+    overflow-y: visible;
+    overflow-x: hidden;
+    display: block;
+
+    &#passcode-history, &#passcode-add {
+      height: $tableHistoryHeight;
+    }
+
+    &#passcode-query-result {
+      height: $tableQueryHeight;
+
+      .emphasis {
+        font-weight: bold;
+      }
+    }
+
+    &#passcode-query-result, &#passcode-add {
+      td {
+        &:first-child {
+          width: $tableQueryFirstColWidth;
+        }
+
+        &:last-child {
+          width: $tableWidth - $tableQueryFirstColWidth;
+          text-align: left;
+        }
+      }
+
+    }
+
+    .passcode-query-edit, .passcode-add-input {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-weight: inherit;
+      width: 100%;
+      outline: none;
+    }
+
+    .passcode-add-textarea {
+      resize: none;
+      height: 329px;
+      font-family: monospace;
+      text-transform: uppercase;
+    }
+
+    .checkbox-col {
+      width: 60px;
+    }
+
+    .type-col {
+      width: 72%;
+    }
+
+    .time-col {
+      white-space: pre;
+      width: 64px;
+    }
+
+    .passcode-col {
+      white-space: pre;
+      max-width: 220px;
+      width: 220px;
+    }
+
+    .transaction-id-col {
+      font-family: monospace;
+    }
+  }
+
+  .mdl-progress {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.content {
+  margin: 25px 0;
+  flex-grow: 0;
+  -webkit-flex-grow: 0;
+
+  .mdl-card {
+    margin: 0 auto;
+    width: 600px;
+    padding: 20px;
+    min-height: 100px;
+
+    .mdl-card__title {
+      display: block;
+
+      .mdl-card__title-text {
+        font-weight: bold;
+        padding: 0 20px 0;
+      }
+
+      .match {
+        padding-top: 4px;
+        float: right;
+      }
+    }
+
+    .mdl-card__menu {
+      top: 40px;
+      right: 45px;
+    }
+
+    .mdl-card__supporting-text {
+      padding-left: 50px;
+    }
+
+    .mdl-card__actions {
+      padding-left: 20px;
+
+      .mdl-textfield {
+        width: 175%;
+      }
+    }
+
+    .switch {
+      display: inline-block;
+      position: relative;
+      width: 2.5rem;
+      height: 1rem;
+      border-radius: 0.5rem;
+      background: rgba(0, 0, 0, 0.26);
+      -webkit-transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      vertical-align: middle;
+      cursor: pointer;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -0.25rem;
+        left: -0.25rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        background: #fafafa;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.28);
+        border-radius: 50%;
+        -webkit-transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      &:active::before {
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.28), 0 0 0 1.25rem rgba(128, 128, 128, 0.1);
+      }
+    }
+
+    .switch-input:checked + .switch {
+      background: rgba(33, 150, 243, 0.5);
+    }
+    .switch-input:checked + .switch::before {
+      left: 1.25rem;
+      background: rgb(33, 150, 243);
+    }
+    .switch-input:checked + .switch:active::before {
+      box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.28), 0 0 0 1.25rem rgba(33, 150, 243, 0.2);
+    }
+  }
+}
+
+

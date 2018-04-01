@@ -1,0 +1,44 @@
+{
+  "name": "Pal",
+  "description": "Anoxic's own secret extension",
+  "version": "0.0.1",
+  "browser_action": {
+    "default_title": "Pal",
+    "default_popup": "./popup.html"
+  },
+  "background": {
+    "scripts": [
+      "static/js/lib/jquery.min.js",
+      "static/js/background.js"
+    ]
+  },
+  "permissions": [
+    "cookies",
+    "storage",
+    "webRequest",
+    "*://*/*",
+    "notifications",
+    "webRequestBlocking"
+  ],
+  "icons":{
+    "100": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "static/js/script.js"
+      ],
+      "run_at": "document_end",
+      "match_about_blank": true
+    }
+  ],
+  "web_accessible_resources": [
+    "static/icon.png",
+    "static/success.ogg"
+  ],
+  "options_page": "options.html",
+  "manifest_version": 2
+}

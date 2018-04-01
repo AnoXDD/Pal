@@ -1,0 +1,134 @@
+body.passcode-fetcher {
+  font-family: Roboto;
+  overflow: hidden; }
+  body.passcode-fetcher #passcode-amount {
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    width: 30px;
+    text-align: center; }
+  body.passcode-fetcher #passcode-result {
+    resize: none;
+    font-family: Roboto;
+    font-size: 12px; }
+  body.passcode-fetcher .passcode-result-wrapper {
+    position: absolute;
+    right: 3px;
+    bottom: 0;
+    width: 200px;
+    resize: none; }
+  body.passcode-fetcher .mdl-card {
+    min-height: 0;
+    width: 540px; }
+    body.passcode-fetcher .mdl-card .mdl-card__supporting-text {
+      text-align: center;
+      align-self: center; }
+    body.passcode-fetcher .mdl-card .mdl-card__actions.mdl-card--center {
+      text-align: center; }
+  body.passcode-fetcher .mdl-data-table {
+    width: 557px;
+    height: 451px;
+    overflow-y: visible;
+    overflow-x: hidden;
+    display: block; }
+    body.passcode-fetcher .mdl-data-table#passcode-history, body.passcode-fetcher .mdl-data-table#passcode-add {
+      height: 500px; }
+    body.passcode-fetcher .mdl-data-table#passcode-query-result {
+      height: 416px; }
+      body.passcode-fetcher .mdl-data-table#passcode-query-result .emphasis {
+        font-weight: bold; }
+    body.passcode-fetcher .mdl-data-table#passcode-query-result td:first-child, body.passcode-fetcher .mdl-data-table#passcode-add td:first-child {
+      width: 200px; }
+    body.passcode-fetcher .mdl-data-table#passcode-query-result td:last-child, body.passcode-fetcher .mdl-data-table#passcode-add td:last-child {
+      width: 357px;
+      text-align: left; }
+    body.passcode-fetcher .mdl-data-table .passcode-query-edit, body.passcode-fetcher .mdl-data-table .passcode-add-input {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-weight: inherit;
+      width: 100%;
+      outline: none; }
+    body.passcode-fetcher .mdl-data-table .passcode-add-textarea {
+      resize: none;
+      height: 329px;
+      font-family: monospace;
+      text-transform: uppercase; }
+    body.passcode-fetcher .mdl-data-table .checkbox-col {
+      width: 60px; }
+    body.passcode-fetcher .mdl-data-table .type-col {
+      width: 72%; }
+    body.passcode-fetcher .mdl-data-table .time-col {
+      white-space: pre;
+      width: 64px; }
+    body.passcode-fetcher .mdl-data-table .passcode-col {
+      white-space: pre;
+      max-width: 220px;
+      width: 220px; }
+    body.passcode-fetcher .mdl-data-table .transaction-id-col {
+      font-family: monospace; }
+  body.passcode-fetcher .mdl-progress {
+    position: absolute;
+    top: 0;
+    width: 100%; }
+
+.content {
+  margin: 25px 0;
+  flex-grow: 0;
+  -webkit-flex-grow: 0; }
+  .content .mdl-card {
+    margin: 0 auto;
+    width: 600px;
+    padding: 20px;
+    min-height: 100px; }
+    .content .mdl-card .mdl-card__title {
+      display: block; }
+      .content .mdl-card .mdl-card__title .mdl-card__title-text {
+        font-weight: bold;
+        padding: 0 20px 0; }
+      .content .mdl-card .mdl-card__title .match {
+        padding-top: 4px;
+        float: right; }
+    .content .mdl-card .mdl-card__menu {
+      top: 40px;
+      right: 45px; }
+    .content .mdl-card .mdl-card__supporting-text {
+      padding-left: 50px; }
+    .content .mdl-card .mdl-card__actions {
+      padding-left: 20px; }
+      .content .mdl-card .mdl-card__actions .mdl-textfield {
+        width: 175%; }
+    .content .mdl-card .switch {
+      display: inline-block;
+      position: relative;
+      width: 2.5rem;
+      height: 1rem;
+      border-radius: 0.5rem;
+      background: rgba(0, 0, 0, 0.26);
+      -webkit-transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      vertical-align: middle;
+      cursor: pointer; }
+      .content .mdl-card .switch::before {
+        content: '';
+        position: absolute;
+        top: -0.25rem;
+        left: -0.25rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        background: #fafafa;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.28);
+        border-radius: 50%;
+        -webkit-transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+      .content .mdl-card .switch:active::before {
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.28), 0 0 0 1.25rem rgba(128, 128, 128, 0.1); }
+    .content .mdl-card .switch-input:checked + .switch {
+      background: rgba(33, 150, 243, 0.5); }
+    .content .mdl-card .switch-input:checked + .switch::before {
+      left: 1.25rem;
+      background: #2196f3; }
+    .content .mdl-card .switch-input:checked + .switch:active::before {
+      box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.28), 0 0 0 1.25rem rgba(33, 150, 243, 0.2); }
+
+/*# sourceMappingURL=options.css.map */
