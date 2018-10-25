@@ -50,7 +50,7 @@ var scripts = {
   },
   "eBayPreProcessor": {
     name       : "eBayPreProcessor",
-    match      : ["contact.ebay.com"],
+    match      : ["www.ebay.com/contact"],
     description: "Preprocess eBay message to make my passcode fetcher work",
     command    : false,
     execute    : "eBayPreProcessor",

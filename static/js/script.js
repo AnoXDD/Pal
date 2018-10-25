@@ -148,11 +148,11 @@ function eBayPreProcessor() {
         "		Sofbpf#ofbuf#nf#b#slpjwjuf#effgab`h#je#zlv#fmilz-#Kbuf#b#dqfbw#gbz#9*");
   });
 
-  var $parent = document.querySelector("#CUSubmitForm .tas");
+  var $parent = document.getElementById("container-w1");
   $parent.insertBefore($process, $parent.firstChild);
 
   // Make the item price changable
-  var $itemPrice = document.getElementById("itemPrice");
+  var $itemPrice = document.getElementById("item-price-paid");
   $itemPrice
     .outerHTML = '<input onclick="this.select()" id="itemPrice" value="' + $itemPrice
     .textContent
