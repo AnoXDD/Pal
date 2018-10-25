@@ -43,16 +43,16 @@ function processRawData(data) {
  */
 function getTransactionIDandTotalFromPayPal($html) {
   var $panels = $html.find(
-      ".transactionRow .highlightTransactionPanel:not(.hide)"),
-      transactionID = $panels.find(":contains('Transaction ID')")
-          .filter(function() {
-            return $(this).children().length === 0;
-          })
-          .next()
-          .text(),
-      total = $panels.find(":contains('Total')").filter(function() {
+    ".transactionRow .highlightTransactionPanel:not(.hide)"),
+    transactionID = $panels.find(":contains('Transaction ID')")
+      .filter(function() {
         return $(this).children().length === 0;
-      }).parent().next().text().substr(1);
+      })
+      .next()
+      .text(),
+    total = $panels.find(":contains('Total')").filter(function() {
+      return $(this).children().length === 0;
+    }).parent().next().text().substr(1);
 
   return {
     transactionID: transactionID,
@@ -66,9 +66,13 @@ function getTransactionIDandTotalFromPayPal($html) {
  * @returns {{transactionID: *, total: *}}
  */
 function getTransactionIDandTotalFromeBay($html) {
-  var userName = $html.find("#CUSubmitForm .greet-user").text().substr(3, 4),
-      total = parseInt($html.find("#itemPrice").val() || $html.find(
-                  "#itemPrice").text().substr(1)) * 0.87 - 0.03;
+  var userName = $html.find("#msg_cnt_cnt")
+      .attr("placeholder")
+      .split(" ")
+      .pop()
+      .substr(0, 4),
+    total = parseInt($html.find("#itemPrice").val() || $html.find(
+          "#itemPrice").text().substr(1)) * 0.87 - 0.03;
 
   if (total) {
     total = total.toFixed(2);
@@ -76,9 +80,9 @@ function getTransactionIDandTotalFromeBay($html) {
     total = undefined;
   }
 
-  var transactionID = ($html.find("#itemDetailsBody .fnt_14px")
-          .eq(1)
-          .text() || "") + " " + userName;
+  var transactionID = ($html.find("#itemnumber")
+      .eq(1)
+      .text() || "") + " " + userName;
 
   return {
     transactionID: transactionID,
@@ -93,7 +97,7 @@ function getTransactionIDandTotalFromeBay($html) {
  * @returns {{transactionID: *, total: string}}
  */
 function getTransactionIDandTotalFromPage(document) {
-  if (document.url.indexOf("contact.ebay.com") !== -1) {
+  if (document.url.indexOf("www.ebay.com/contact") !== -1) {
     return getTransactionIDandTotalFromeBay($(document.data));
   } else {
     return getTransactionIDandTotalFromPayPal($(document.data));
@@ -113,10 +117,10 @@ function addEntryToPasscodeHistory(passcode,
                                    date,
                                    title) {
   $("#passcode-history").find("tbody").append(
-      '<tr class="passcode-history-row">\
-                  <td class="mdl-data-table__cell--non-numeric">' + new Date(
-          date || Date.now()).toISOString()
-          .substr(0, 16) + '</td>\
+    '<tr class="passcode-history-row">\
+                <td class="mdl-data-table__cell--non-numeric">' + new Date(
+      date || Date.now()).toISOString()
+      .substr(0, 16) + '</td>\
                             <td class="mdl-data-table__cell--non-numeric passcode-col" title="' + (title || "") + '">' + passcode + '</td>\
                             <td class="mdl-data-table__cell--non-numeric transaction-id-col">' + transactionID + '</td>\
                             <td>' + total + '</td>\
@@ -143,22 +147,22 @@ function debug__addEntryToPasscodeHistory(lineOfPasscode) {
   }
 
   addEntryToPasscodeHistory(passcode.join('\n'),
-      "00000000000000000",
-      parseInt(Math.random() * 1000) / 100);
+    "00000000000000000",
+    parseInt(Math.random() * 1000) / 100);
 }
 
 function debug__displayTransactionId() {
   chrome.tabs.getSelected(null, function(tab) {
     chrome.tabs.sendMessage(tab.id,
-        {method: "fetchActiveTabHtml"},
-        function(response) {
-          if (response.method === "fetchActiveTabHtml") {
-            console.log(getTransactionIDandTotalFromPage({
-              data: response.data,
-              url : tab.url
-            }));
-          }
-        });
+      {method: "fetchActiveTabHtml"},
+      function(response) {
+        if (response.method === "fetchActiveTabHtml") {
+          console.log(getTransactionIDandTotalFromPage({
+            data: response.data,
+            url : tab.url
+          }));
+        }
+      });
   });
 }
 
@@ -177,8 +181,8 @@ function updateTableInformation() {
           // Eligible for a code to be given
           var entry = passcodeSheet[i];
           var type = entry[1] === "Card" ?
-              entry[0] + " card" :
-              (entry[0] === "Loadout" ? " Loadout (" + entry[1] + ")" : entry[1]);
+            entry[0] + " card" :
+            (entry[0] === "Loadout" ? " Loadout (" + entry[1] + ")" : entry[1]);
 
           eligibleCards[type] = eligibleCards[type] || [];
 
@@ -196,28 +200,28 @@ function updateTableInformation() {
   function appendActionBar() {
     if (!$("#passcode-actions").length) {
       var $list = $(
-          '<div id="passcode-actions" class="mdl-card__actions mdl-card--border" style="min-height: 0;">\
-          <button id="passcode-amount-minus" class="mdl-button mdl-js-button mdl-button--icon">\
-              <i class="material-icons">remove</i>\
-          </button>\
-          <p id="passcode-amount">1</p>\
-          <button id="passcode-amount-plus" class="mdl-button mdl-js-button mdl-button--icon">\
-              <i class="material-icons">add</i>\
-          </button>\
-          <button id="passcode-get" class="mdl-button mdl-js-button mdl-button--icon">\
-              <i class="material-icons">file_download</i>\
-          </button>\
-          <button class="mdl-button mdl-js-button mdl-button--icon">\
-              <i class="material-icons">delete</i>\
-          </button>\
-          <button id="passcode-copy" class="mdl-button mdl-js-button mdl-button--icon" disabled>\
-              <i class="material-icons">content_copy</i>\
-          </button>\
-          <div class="mdl-textfield mdl-js-textfield passcode-result-wrapper">\
-              <textarea class="mdl-textfield__input" type="text" rows= "1" id="passcode-result" readonly></textarea>\
-              <label class="mdl-textfield__label" for="passcode-result" style="font-family: Roboto"></label>\
-          </div>\
-          </div>');
+        '<div id="passcode-actions" class="mdl-card__actions mdl-card--border" style="min-height: 0;">\
+        <button id="passcode-amount-minus" class="mdl-button mdl-js-button mdl-button--icon">\
+            <i class="material-icons">remove</i>\
+        </button>\
+        <p id="passcode-amount">1</p>\
+        <button id="passcode-amount-plus" class="mdl-button mdl-js-button mdl-button--icon">\
+            <i class="material-icons">add</i>\
+        </button>\
+        <button id="passcode-get" class="mdl-button mdl-js-button mdl-button--icon">\
+            <i class="material-icons">file_download</i>\
+        </button>\
+        <button class="mdl-button mdl-js-button mdl-button--icon">\
+            <i class="material-icons">delete</i>\
+        </button>\
+        <button id="passcode-copy" class="mdl-button mdl-js-button mdl-button--icon" disabled>\
+            <i class="material-icons">content_copy</i>\
+        </button>\
+        <div class="mdl-textfield mdl-js-textfield passcode-result-wrapper">\
+            <textarea class="mdl-textfield__input" type="text" rows= "1" id="passcode-result" readonly></textarea>\
+            <label class="mdl-textfield__label" for="passcode-result" style="font-family: Roboto"></label>\
+        </div>\
+        </div>');
 
       $list.insertAfter("#passcode-table");
     }
@@ -265,9 +269,9 @@ function updateTableInformation() {
       var idName = "passcode" + type.replace(/ /g, "-");
 
       $list +=
-          '<tr>\
-          <td>\
-              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="' + idName + '">\
+        '<tr>\
+        <td>\
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="' + idName + '">\
                             <input type="checkbox" id="' + idName + '" class="mdl-checkbox__input" />\
                             </label>\
                         </td>\
@@ -293,7 +297,7 @@ function updateTableInformation() {
     }, (response) => {
       if (response.fail) {
         $passcodeStatus.addClass(STATUS_RED_CLASS)
-            .text(response.data);
+          .text(response.data);
         setProgressBarVisibility(false);
         return;
       }
@@ -338,10 +342,10 @@ function updateTableInformation() {
   function appendHistoryToTable(recentHistory) {
     for (var i = 0; i !== recentHistory.length; ++i) {
       addEntryToPasscodeHistory(recentHistory[i][2],
-          recentHistory[i][6],
-          recentHistory[i][5],
-          recentHistory[i][4],
-          recentHistory[i][1] + " (" + recentHistory[i][0] + ")");
+        recentHistory[i][6],
+        recentHistory[i][5],
+        recentHistory[i][4],
+        recentHistory[i][1] + " (" + recentHistory[i][0] + ")");
     }
   }
 
@@ -353,8 +357,8 @@ function updateTableInformation() {
   }
 
   var passcodeSheet,
-      passcodeQueryIndex = -1,
-      isNetworkBusy = false;
+    passcodeQueryIndex = -1,
+    isNetworkBusy = false;
 
   setProgressBarVisibility(true);
 
@@ -397,12 +401,12 @@ function updateTableInformation() {
         if (!$(this).hasClass("passcode-add-textarea")) {
           // No it's not
           $(this)
-              .parent()
-              .parent()
-              .next()
-              .children()
-              .children()
-              .focus();
+            .parent()
+            .parent()
+            .next()
+            .children()
+            .children()
+            .focus();
         }
       }
     });
@@ -413,8 +417,8 @@ function updateTableInformation() {
     if (e.ctrlKey && e.keyCode === 13) {
       setProgressBarVisibility(true);
       $("#passcode-status")
-          .removeClass(STATUS_RED_CLASS)
-          .text("Uploading new passcode ...");
+        .removeClass(STATUS_RED_CLASS)
+        .text("Uploading new passcode ...");
 
       // Get the data from UI
       var anomaly, type, owner, passcode;
@@ -439,8 +443,8 @@ function updateTableInformation() {
       if (!anomaly || !type || !owner || !passcode || !passcode.length) {
         setProgressBarVisibility(false);
         $("#passcode-status")
-            .addClass(STATUS_RED_CLASS)
-            .text("Missing information");
+          .addClass(STATUS_RED_CLASS)
+          .text("Missing information");
         return false;
       }
 
@@ -466,8 +470,8 @@ function updateTableInformation() {
 
         setProgressBarVisibility(false);
         $("#passcode-status")
-            .removeClass(STATUS_RED_CLASS)
-            .text("Uploaded");
+          .removeClass(STATUS_RED_CLASS)
+          .text("Uploaded");
       })
     }
   });
@@ -478,8 +482,8 @@ function updateTableInformation() {
     // Test if fetching is successful
     if (response.fail) {
       $("#passcode-status")
-          .addClass(STATUS_RED_CLASS)
-          .text(response.data);
+        .addClass(STATUS_RED_CLASS)
+        .text(response.data);
       return;
     }
 
@@ -492,7 +496,7 @@ function updateTableInformation() {
 
     // Process the cards to be shown in the dialog
     var eligibleCards = getEligibleCards(passcodeSheet),
-        sortedCards = getSortedCards(eligibleCards);
+      sortedCards = getSortedCards(eligibleCards);
 
     // Construct DOMs
     constructPasscodeTable(sortedCards);
@@ -523,89 +527,89 @@ function updateTableInformation() {
     $("#passcode-get").unbind("click").click(() => {
       setProgressBarVisibility(true);
       $passcodeStatus.removeClass(STATUS_RED_CLASS)
-          .text("Updating passcode ...");
+        .text("Updating passcode ...");
 
       // Get the transantion ID and amount of money
       chrome.tabs.getSelected(null, function(tab) {
         chrome.tabs.sendMessage(tab.id,
-            {method: "fetchActiveTabHtml"},
-            function(html) {
-              if (html.method === "fetchActiveTabHtml") {
-                var __ret = getTransactionIDandTotalFromPage({
-                  data: html.data,
-                  url : tab.url
-                });
-                var transactionID = __ret.transactionID;
-                var total = __ret.total;
+          {method: "fetchActiveTabHtml"},
+          function(html) {
+            if (html.method === "fetchActiveTabHtml") {
+              var __ret = getTransactionIDandTotalFromPage({
+                data: html.data,
+                url : tab.url
+              });
+              var transactionID = __ret.transactionID;
+              var total = __ret.total;
 
-                // Abort if no transaction ID and total is fetched
-                if (!transactionID || !total) {
-                  $passcodeStatus
-                      .addClass(STATUS_RED_CLASS)
-                      .text("No transaction ID or total found");
-                  setProgressBarVisibility(false);
-                  return;
-                }
+              // Abort if no transaction ID and total is fetched
+              if (!transactionID || !total) {
+                $passcodeStatus
+                  .addClass(STATUS_RED_CLASS)
+                  .text("No transaction ID or total found");
+                setProgressBarVisibility(false);
+                return;
+              }
 
-                // Get the types of passcode to be fetched
-                $("#passcode-table")
-                    .find("input")
-                    .each(function(index) {
-                      if ($(this).prop("checked")) {
-                        // This is selected
-                        sortedCards[index].selected = true;
-                      }
-                    });
-
-                // Get the indices of passcode to be fetched
-                var indexToBeProcessed = [],
-                    passcodeResult = "",
-                    passcodeAmount = parseInt($passcodeAmount.text());
-                $.each(sortedCards, (index, data) => {
-                  if (data.selected) {
-                    // Yes this is a type of which we want code
-                    for (var i = 0;
-                         i < passcodeAmount && i < data.data.length;
-                         ++i) {
-                      var index = data.data[i];
-
-                      indexToBeProcessed.push(index); // 0
-                                                      // for
-                                                      // fetching
-                                                      // the
-                                                      // first
-                                                      // element
-                      passcodeResult += data.type + " " + passcodeSheet[index][2] + "\n";
-                    }
+              // Get the types of passcode to be fetched
+              $("#passcode-table")
+                .find("input")
+                .each(function(index) {
+                  if ($(this).prop("checked")) {
+                    // This is selected
+                    sortedCards[index].selected = true;
                   }
                 });
 
-                // Abort if nothing is selected
-                if (!indexToBeProcessed.length) {
-                  $passcodeStatus
-                      .addClass(STATUS_RED_CLASS)
-                      .text("Nothing is selected");
-                  setProgressBarVisibility(false);
-                  return;
+              // Get the indices of passcode to be fetched
+              var indexToBeProcessed = [],
+                passcodeResult = "",
+                passcodeAmount = parseInt($passcodeAmount.text());
+              $.each(sortedCards, (index, data) => {
+                if (data.selected) {
+                  // Yes this is a type of which we want code
+                  for (var i = 0;
+                       i < passcodeAmount && i < data.data.length;
+                       ++i) {
+                    var index = data.data[i];
+
+                    indexToBeProcessed.push(index); // 0
+                                                    // for
+                                                    // fetching
+                                                    // the
+                                                    // first
+                                                    // element
+                    passcodeResult += data.type + " " + passcodeSheet[index][2] + "\n";
+                  }
                 }
+              });
 
-                // Update the passcode sheet
-                $.each(indexToBeProcessed, (i, index) => { // `index` is what we want
-                  passcodeSheet[index][4] = new Date().toISOString();
-                  passcodeSheet[index][5] = (total / indexToBeProcessed.length).toFixed(
-                      2);
-                  passcodeSheet[index][6] = transactionID;
-                });
-
-                // Finally, upload it
-                uploadPasscodeData(() => {
-                  passcodeResult = passcodeResult.substr(0,
-                      passcodeResult.length - 1);
-                  $("#passcode-result").val(passcodeResult);
-                  $("#passcode-copy").prop("disabled", false);
-                });
+              // Abort if nothing is selected
+              if (!indexToBeProcessed.length) {
+                $passcodeStatus
+                  .addClass(STATUS_RED_CLASS)
+                  .text("Nothing is selected");
+                setProgressBarVisibility(false);
+                return;
               }
-            });
+
+              // Update the passcode sheet
+              $.each(indexToBeProcessed, (i, index) => { // `index` is what we want
+                passcodeSheet[index][4] = new Date().toISOString();
+                passcodeSheet[index][5] = (total / indexToBeProcessed.length).toFixed(
+                  2);
+                passcodeSheet[index][6] = transactionID;
+              });
+
+              // Finally, upload it
+              uploadPasscodeData(() => {
+                passcodeResult = passcodeResult.substr(0,
+                  passcodeResult.length - 1);
+                $("#passcode-result").val(passcodeResult);
+                $("#passcode-copy").prop("disabled", false);
+              });
+            }
+          });
       });
 
     });
@@ -643,11 +647,11 @@ function updateTableInformation() {
         if (passcodeQueryIndex === -1) {
           // Nothing found
           $passcodeStatus.addClass(STATUS_RED_CLASS)
-              .text("Not found");
+            .text("Not found");
         } else if (passcodeQueryIndex === -2) {
           // Multiple found
           $passcodeStatus.removeClass(STATUS_RED_CLASS)
-              .text("Multiple found");
+            .text("Multiple found");
         } else {
           // Found a single one
           $passcodeStatus.removeClass(STATUS_RED_CLASS).text("Found");
@@ -657,40 +661,40 @@ function updateTableInformation() {
         var result = passcodeSheet[passcodeQueryIndex] || [];
 
         $("#passcode-query-result")
-            .find(".passcode-query-edit")
-            .each(function(index) {
-              var text = result[index],
-                  placeholder = "",
-                  elemClass;
+          .find(".passcode-query-edit")
+          .each(function(index) {
+            var text = result[index],
+              placeholder = "",
+              elemClass;
 
-              if (text === undefined) {
-                text = "";
-                placeholder = "N/A";
-                elemClass = STATUS_RED_CLASS;
-              } else if (text === "") {
-                text = "";
-                placeholder = "[Empty]";
-                elemClass = STATUS_RED_CLASS;
-              }
+            if (text === undefined) {
+              text = "";
+              placeholder = "N/A";
+              elemClass = STATUS_RED_CLASS;
+            } else if (text === "") {
+              text = "";
+              placeholder = "[Empty]";
+              elemClass = STATUS_RED_CLASS;
+            }
 
-              $(this)
-                  .prop({
-                    class      : "passcode-query-edit",
-                    value      : text,
-                    placeholder: placeholder
-                  })
-                  .addClass(elemClass)
-                  .val(text);
+            $(this)
+              .prop({
+                class      : "passcode-query-edit",
+                value      : text,
+                placeholder: placeholder
+              })
+              .addClass(elemClass)
+              .val(text);
 
-              // Render the class if hit certain word
-              if (text === "eBay" || !$(this)
-                      .hasClass(STATUS_RED_CLASS) && $(this)
-                      .parent()
-                      .prev()
-                      .text() === "Redeemed at") {
-                $(this).addClass(STATUS_GREEN_CLASS);
-              }
-            });
+            // Render the class if hit certain word
+            if (text === "eBay" || !$(this)
+                .hasClass(STATUS_RED_CLASS) && $(this)
+                .parent()
+                .prev()
+                .text() === "Redeemed at") {
+              $(this).addClass(STATUS_GREEN_CLASS);
+            }
+          });
       } else {
         $(".passcode-query-edit").val("");
       }
